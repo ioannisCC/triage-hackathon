@@ -241,26 +241,6 @@ export function getTopAgents(n: number = 8): AgentProfile[] {
     .slice(0, n)
 }
 
-export function getAgentHireInfo(agent: AgentProfile) {
-  const successRate = agent.totalRequests > 0
-    ? agent.successfulRequests / agent.totalRequests
-    : 0.85
-
-  const qualityScore = calculateQualityScore(agent.trustScore, 50, successRate * 100)
-  const hirePriceBand = getSimpleHirePriceBand(agent.trustScore)
-  const formulaPrice = calculateHirePrice({
-    qualityScore,
-    basePrice: 2.0,
-    successRate,
-  })
-
-  return {
-    qualityScore,
-    hirePriceBand,
-    formulaPrice,
-    successRate,
-  }
-}
 
 /**
  * Seed demo agents for leaderboard

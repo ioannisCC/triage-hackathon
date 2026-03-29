@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { AgentProfile, Tier } from '../types'
+import type { AgentProfile } from '../types'
 import { TIER_META } from '../types'
 import { trunc } from '../lib/utils'
 import { TierDot } from './TierChip'

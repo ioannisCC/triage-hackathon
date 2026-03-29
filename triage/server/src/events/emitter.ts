@@ -26,7 +26,7 @@ export function startWebSocketServer(port: number) {
 }
 
 /** Production mode: attach to existing HTTP server for upgrade on /ws path */
-export function attachWebSocketToServer(server: { on: (event: string, handler: (...args: unknown[]) => void) => void }) {
+export function attachWebSocketToServer(server: { on: (event: string, handler: (...args: any[]) => void) => void }) {
   wss = new WebSocketServer({ noServer: true })
   wireConnections()
 

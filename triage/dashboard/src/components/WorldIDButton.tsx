@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { IDKitRequestWidget, deviceLegacy } from '@worldcoin/idkit'
-import type { IDKitRequestHookConfig } from '@worldcoin/idkit'
+import type { IDKitRequestHookConfig, IDKitResult } from '@worldcoin/idkit'
 import { API_URL } from '../config'
 
 const APP_ID = 'app_7d1c626d5f999f278a30144020444544' as const
@@ -26,7 +26,7 @@ export function WorldIDButton({ onVerified }: { onVerified: (humanId: string) =>
     setLoading(false)
   }, [])
 
-  const handleSuccess = useCallback(async (result: Record<string, unknown>) => {
+  const handleSuccess = useCallback(async (result: IDKitResult) => {
     try {
       const res = await fetch(`${API_URL}/api/verify-human`, {
         method: 'POST',

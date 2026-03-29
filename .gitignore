@@ -29,8 +29,8 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Lock files (optional — remove these lines if you want locks in repo)
-# package-lock.json
+# Lock files
+package-lock.json
 
 # Vite cache
 .vite/

@@ -293,8 +293,12 @@ export function getMonitoredWallets() {
   }))
 }
 
-export function stopMonitoring(address: string) {
-  monitoredWallets.delete(address.toLowerCase())
+export function stopMonitoring(address?: string) {
+  if (address) {
+    monitoredWallets.delete(address.toLowerCase())
+  } else {
+    monitoredWallets.clear()
+  }
   if (monitoredWallets.size === 0 && pollingInterval) {
     clearInterval(pollingInterval); pollingInterval = null
   }

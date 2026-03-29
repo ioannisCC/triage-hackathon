@@ -73,6 +73,9 @@ import { readFile } from 'fs/promises'
 import { join } from 'path'
 
 const distDir = join(process.cwd(), 'dist')
+console.log(`[STATIC] Serving from: ${distDir}`)
+
+app.get('/health', (c) => c.text('ok'))
 
 app.get('/*', async (c) => {
   const url = new URL(c.req.url)
@@ -86,9 +89,14 @@ app.get('/*', async (c) => {
     }
     const content = await readFile(filePath)
     return new Response(content, { headers: { 'Content-Type': mimes[ext] || 'application/octet-stream' } })
-  } catch {
-    const index = await readFile(join(distDir, 'index.html'))
-    return new Response(index, { headers: { 'Content-Type': 'text/html' } })
+  } catch (e) {
+    try {
+      const index = await readFile(join(distDir, 'index.html'))
+      return new Response(index, { headers: { 'Content-Type': 'text/html' } })
+    } catch (e2) {
+      console.error('[STATIC] Cannot serve:', url.pathname, 'dist dir missing?', e2)
+      return c.text('Not found — dist/ may not exist', 500)
+    }
   }
 })
 

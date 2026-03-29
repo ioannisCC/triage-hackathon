@@ -71,31 +71,38 @@ app.get('/api/agents', (c) => c.json([]))
 
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { existsSync } from 'fs'
 
 const distDir = join(process.cwd(), 'dist')
-console.log(`[STATIC] Serving from: ${distDir}`)
+console.log('[STATIC] Serving from:', distDir, 'exists:', existsSync(distDir))
 
 app.get('/health', (c) => c.text('ok'))
 
 app.get('/*', async (c) => {
-  const url = new URL(c.req.url)
-  const filePath = join(distDir, url.pathname === '/' ? 'index.html' : url.pathname)
   try {
-    const ext = filePath.split('.').pop() || ''
+    const url = new URL(c.req.url)
+    const pathname = url.pathname === '/' ? '/index.html' : url.pathname
+    const fp = join(distDir, pathname)
+
     const mimes: Record<string, string> = {
-      html: 'text/html', js: 'application/javascript', css: 'text/css',
-      svg: 'image/svg+xml', png: 'image/png', ico: 'image/x-icon',
-      json: 'application/json', wasm: 'application/wasm',
+      '.html': 'text/html', '.js': 'application/javascript',
+      '.css': 'text/css', '.svg': 'image/svg+xml',
+      '.png': 'image/png', '.wasm': 'application/wasm',
+      '.ico': 'image/x-icon', '.json': 'application/json',
     }
-    const content = await readFile(filePath)
-    return new Response(content, { headers: { 'Content-Type': mimes[ext] || 'application/octet-stream' } })
-  } catch (e) {
+
+    const ext = '.' + (fp.split('.').pop() || 'html')
+    const data = await readFile(fp)
+    return new Response(data, {
+      headers: { 'Content-Type': mimes[ext] || 'application/octet-stream' }
+    })
+  } catch {
     try {
       const index = await readFile(join(distDir, 'index.html'))
       return new Response(index, { headers: { 'Content-Type': 'text/html' } })
-    } catch (e2) {
-      console.error('[STATIC] Cannot serve:', url.pathname, 'dist dir missing?', e2)
-      return c.text('Not found — dist/ may not exist', 500)
+    } catch {
+      console.error('[STATIC] No index.html found in', distDir)
+      return c.text('Not found', 404)
     }
   }
 })

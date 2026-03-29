@@ -1,4 +1,8 @@
-[![Hackathon Winner](https://img.shields.io/badge/🏆_1st_Place-AgentKit_Hackathon_by_World,_Coinbase_&_XMTP-gold?style=for-the-badge)](https://x.com/CoinbaseDev/status/2037311978386169988)
+<p align="center">
+  <a href="https://x.com/CoinbaseDev/status/2037311978386169988">
+    <img src="https://img.shields.io/badge/🏆_1st_Place-AgentKit_Hackathon_by_World,_Coinbase_&_XMTP-gold?style=for-the-badge" alt="Hackathon Winner" />
+  </a>
+</p>
 
 <p align="center">
   <img src="triage/dashboard/public/favicon.svg" width="80" alt="Triage" />

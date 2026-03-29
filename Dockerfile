@@ -21,4 +21,4 @@ WORKDIR /app/server
 
 EXPOSE 8080
 
-CMD ["node", "--import", "tsx", "src/index.ts"]
+CMD ["node", "start.js"]

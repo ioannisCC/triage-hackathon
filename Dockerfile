@@ -26,4 +26,4 @@ COPY package.json .
 EXPOSE 8080
 
 WORKDIR /app/server
-CMD ["npx", "tsx", "src/index.ts"]
+CMD ["sh", "-c", "node -e \"require('@xmtp/node-bindings'); console.log('RUNTIME BINDINGS OK')\" && npx tsx src/index.ts"]

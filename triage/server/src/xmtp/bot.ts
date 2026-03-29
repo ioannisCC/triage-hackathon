@@ -134,7 +134,9 @@ export async function startXmtpBot() {
     }
 
     const xmtpEnv = (process.env.XMTP_ENV as 'dev' | 'production') || 'dev'
-    const dbPath = join(process.cwd(), '.xmtp-db')
+    const dbPath = process.env.RAILWAY_VOLUME_MOUNT_PATH
+      ? join(process.env.RAILWAY_VOLUME_MOUNT_PATH, 'xmtp-db')
+      : join(process.cwd(), '.xmtp-db')
 
     if (signer) {
       try {

@@ -25,4 +25,5 @@ COPY package.json .
 
 EXPOSE 8080
 
-CMD ["npx", "-y", "tsx", "server/src/index.ts"]
+WORKDIR /app/server
+CMD ["npx", "tsx", "src/index.ts"]

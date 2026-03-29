@@ -17,7 +17,7 @@ export interface ClassificationResult {
 }
 
 // AgentBook verifier — initialized once
-const agentBook = createAgentBookVerifier({ network: 'base' })
+const agentBook = createAgentBookVerifier({ network: 'base' } as any)
 
 /**
  * Identity hierarchy (strongest to weakest):

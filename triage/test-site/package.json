@@ -25,7 +25,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "three": "^0.183.2",
-    "triage-middleware": "file:../packages/triage-middleware",
+    "triage-middleware": "^1.0.8",
     "ws": "^8.20.0"
   },
   "devDependencies": {

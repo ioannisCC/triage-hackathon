@@ -639,7 +639,7 @@ if (isProd) {
     const reqPath = c.req.path === '/' ? '/index.html' : c.req.path
     try {
       const { readFile } = await import('fs/promises')
-      const filePath = join(__dirname, '../../dashboard/dist', reqPath)
+      const filePath = join(process.cwd(), '../dashboard/dist', reqPath)
       const file = await readFile(filePath)
       const ext = reqPath.split('.').pop() || 'html'
       const types: Record<string, string> = {
@@ -653,7 +653,7 @@ if (isProd) {
     } catch {
       // SPA fallback — serve index.html for client-side routing
       const { readFile } = await import('fs/promises')
-      const index = await readFile(join(__dirname, '../../dashboard/dist/index.html'))
+      const index = await readFile(join(process.cwd(), 'dashboard/dist/index.html'))
       return new Response(index, { headers: { 'Content-Type': 'text/html' } })
     }
   })

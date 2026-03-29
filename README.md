@@ -244,6 +244,7 @@ triage/
 ├── dashboard/                   React monitoring UI (glass design)
 └── test-site/                   "The Roaster" demo app
 ```
+See documentation/ for architecture, env vars, deployment notes, and deeper technical documentation.
 
 ## Configuration
 

@@ -13,7 +13,8 @@ RUN cd dashboard && npm run build
 # Install server (fresh, on Linux — picks up correct native bindings)
 COPY server/package.json server/
 RUN cd server && npm install
-RUN ls -la server/node_modules/@xmtp/ && ls -la server/node_modules/@xmtp/node-bindings/ || echo "NO XMTP BINDINGS FOUND"
+RUN ls -la server/node_modules/@xmtp/node-bindings/dist/ && find server/node_modules/@xmtp -name "*.node" || echo "NO .node FILES"
+RUN cat server/node_modules/@xmtp/node-bindings/package.json | grep -A 20 "optionalDependencies" || echo "NO OPTIONAL DEPS"
 
 # Copy server source
 COPY server/ server/

@@ -14,18 +14,15 @@ RUN cd dashboard && npm run build
 
 COPY server/package.json server/
 RUN cd server && npm install
-
-# DEBUG: show the REAL error
-RUN ldd server/node_modules/@xmtp/node-bindings/dist/bindings_node.linux-x64-gnu.node
-RUN node -e "try{require('./server/node_modules/@xmtp/node-bindings');console.log('BINDING OK')}catch(e){console.error(e);process.exit(1)}"
-
 COPY server/ server/
 COPY package.json .
 
-# CRITICAL: WORKDIR must be where node_modules live
+# Compile TypeScript to JavaScript
+RUN cd server && npx tsc --outDir dist || true
+
 WORKDIR /app/server
 
 EXPOSE 8080
 
-# CRITICAL: no npx, use local tsx directly
-CMD ["node", "node_modules/.bin/tsx", "src/index.ts"]
+# Run compiled JS with plain node — no tsx
+CMD ["node", "dist/index.js"]

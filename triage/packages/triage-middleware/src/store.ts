@@ -2,6 +2,15 @@ import type { Tier, AgentProfile } from './types'
 import { calculateTrustScore } from './scoring'
 
 const agents = new Map<string, AgentProfile>()
+const verifiedHumans = new Set<string>()
+
+export function addVerifiedHuman(nullifierHash: string) {
+  verifiedHumans.add(nullifierHash)
+}
+
+export function isVerifiedHuman(nullifierHash: string): boolean {
+  return verifiedHumans.has(nullifierHash)
+}
 
 function tierRank(tier: Tier): number {
   return { HUMAN: 4, HUMAN_AGENT: 3, ANON_BOT: 2, BLOCKED: 1 }[tier] ?? 0

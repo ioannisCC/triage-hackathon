@@ -5,7 +5,7 @@ import { join } from 'path'
 import { fileURLToPath } from 'url'
 import type { TriageConfig, TriageEvent } from './types'
 import { classifyRequest } from './classify'
-import { recordRequest, getAllAgents, getAgent } from './store'
+import { recordRequest, getAllAgents, getAgent, addVerifiedHuman } from './store'
 import { getPrice, getSimplePlatformFee, getSimpleHirePriceBand } from './pricing'
 import { emitEvent, startWebSocketServer, attachWebSocketToServer } from './emitter'
 import { TIER_COLORS } from './types'
@@ -13,7 +13,7 @@ import { TIER_COLORS } from './types'
 export type { Tier, AgentProfile, TriageEvent, TriageConfig, ClassificationResult, TrustBreakdown } from './types'
 export { calculateTrustScore, getTrustBreakdown, identityScore, behaviorScore, reputationScore, riskPenalty } from './scoring'
 export { calculatePlatformFee, calculateHirePrice, calculateQualityScore, getSimplePlatformFee, getSimpleHirePriceBand, getPrice, PRICING_CONSTANTS } from './pricing'
-export { recordRequest, getAgent, getAllAgents, getTopAgents, getOrCreateAgent } from './store'
+export { recordRequest, getAgent, getAllAgents, getTopAgents, getOrCreateAgent, addVerifiedHuman, isVerifiedHuman } from './store'
 export { emitEvent, startWebSocketServer, attachWebSocketToServer } from './emitter'
 export { classifyRequest } from './classify'
 
@@ -162,8 +162,48 @@ export function triage(config: TriageConfig) {
  * triageDashboard(app)
  * ```
  */
-export function triageDashboard(app: Hono) {
+export function triageDashboard(app: Hono, worldIdConfig?: { rpId: string; signingKey: string }) {
   const dashboardDir = join(fileURLToPath(import.meta.url), '../../dashboard-dist')
+
+  // World ID verification routes
+  if (worldIdConfig) {
+    app.post('/triage/verify-context', async (c) => {
+      try {
+        const { signRequest } = await import('@worldcoin/idkit-server')
+        const rpSig = signRequest('triage-verify', worldIdConfig.signingKey)
+        return c.json({
+          rp_id: worldIdConfig.rpId,
+          nonce: rpSig.nonce,
+          created_at: rpSig.createdAt,
+          expires_at: rpSig.expiresAt,
+          signature: rpSig.sig,
+        })
+      } catch (err) {
+        return c.json({ error: 'World ID not configured' }, 500)
+      }
+    })
+
+    app.post('/triage/verify-human', async (c) => {
+      try {
+        const body = await c.req.json()
+        const response = await fetch(
+          `https://developer.world.org/api/v4/verify/${worldIdConfig.rpId}`,
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+        )
+        if (response.ok) {
+          const result = await response.json() as { nullifier_hash?: string }
+          const humanId = result.nullifier_hash || 'world-id-verified'
+          addVerifiedHuman(humanId)
+          return c.json({ success: true, verified: true, humanId })
+        } else {
+          const error = await response.json()
+          return c.json({ success: false, error }, 400)
+        }
+      } catch {
+        return c.json({ success: false, error: 'Verification failed' }, 500)
+      }
+    })
+  }
 
   const MIME: Record<string, string> = {
     html: 'text/html', js: 'application/javascript', mjs: 'application/javascript',

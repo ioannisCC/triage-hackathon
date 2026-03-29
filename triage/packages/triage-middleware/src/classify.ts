@@ -1,6 +1,7 @@
 import type { Context } from 'hono'
 import type { Tier, ClassificationResult } from './types'
 import { TIER_COLORS } from './types'
+import { isVerifiedHuman } from './store'
 
 /**
  * 4-Tier Identity Classification
@@ -19,12 +20,11 @@ export async function classifyRequest(c: Context): Promise<ClassificationResult>
     trustScore: tier === 'HUMAN' ? 100 : tier === 'HUMAN_AGENT' ? 40 : tier === 'ANON_BOT' ? 5 : 0,
   })
 
-  // TIER 1: World ID verification via proof header
-  const worldIdProof = c.req.header('x-world-id-proof')
-  if (worldIdProof) {
-    // In production, verify the proof against World ID API
-    // The proof is verified server-side before this middleware runs
-    return result('HUMAN', null, 'world-id-verified')
+  // TIER 1: World ID verification
+  // Only accepts nullifier hashes that were verified via World's API through /triage/verify-human
+  const worldIdHeader = c.req.header('x-world-id') || c.req.header('x-world-id-proof')
+  if (worldIdHeader && isVerifiedHuman(worldIdHeader)) {
+    return result('HUMAN', null, worldIdHeader)
   }
 
   // TIER 2: AgentKit on-chain verification

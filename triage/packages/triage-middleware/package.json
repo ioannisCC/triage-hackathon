@@ -1,10 +1,14 @@
 {
   "name": "triage-middleware",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "description": "Trust infrastructure for the agent economy — classify, score, and price every AI agent request",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist/", "dashboard-dist/", "README.md"],
+  "files": [
+    "dist/",
+    "dashboard-dist/",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
@@ -14,6 +18,7 @@
   },
   "dependencies": {
     "@worldcoin/agentkit": "^0.1.5",
+    "@worldcoin/idkit-server": "^1.0.0",
     "ws": "^8.0.0"
   },
   "devDependencies": {
@@ -22,7 +27,16 @@
     "hono": "^4.12.0",
     "typescript": "^5.0.0"
   },
-  "keywords": ["triage", "trust", "x402", "world-id", "agentkit", "middleware", "agent-economy", "hono"],
+  "keywords": [
+    "triage",
+    "trust",
+    "x402",
+    "world-id",
+    "agentkit",
+    "middleware",
+    "agent-economy",
+    "hono"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",

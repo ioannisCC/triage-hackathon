@@ -2,9 +2,8 @@ import { useState, useEffect, useRef, useCallback, useMemo, type ReactNode } fro
 
 // ─── Config ──────────────────────────────────────────────────────────
 
-const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-const API_URL = isDev ? 'http://localhost:4021' : ''
-const WS_URL = isDev ? 'ws://localhost:4022' : `wss://${window.location.host}/ws`
+const API_URL = ''
+const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`
 
 // ─── Types ───────────────────────────────────────────────────────────
 

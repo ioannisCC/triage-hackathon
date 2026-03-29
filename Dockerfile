@@ -2,23 +2,19 @@ FROM node:22
 
 WORKDIR /app
 
-# Install dashboard
+# Install & build dashboard
 COPY dashboard/package.json dashboard/
 RUN cd dashboard && npm install
-
-# Build dashboard
 COPY dashboard/ dashboard/
 RUN cd dashboard && npm run build
 
-# Install server (fresh, on Linux — picks up correct native bindings)
+# Install server
 COPY server/package.json server/
 RUN cd server && npm install
-RUN cd server && node -e "try { require('@xmtp/node-bindings'); console.log('BINDINGS OK') } catch(e) { console.error('FULL ERROR:', e.message); console.error('CAUSE:', e.cause || 'none'); }"
-RUN ls -la server/node_modules/@xmtp/node-bindings/dist/ && find server/node_modules/@xmtp -name "*.node" || echo "NO .node FILES"
-RUN cat server/node_modules/@xmtp/node-bindings/package.json | grep -A 20 "optionalDependencies" || echo "NO OPTIONAL DEPS"
 
-# Copy server source
+# Copy server source & compile TS to JS
 COPY server/ server/
+RUN cd server && npx tsc --outDir dist
 
 # Copy root package.json
 COPY package.json .
@@ -26,4 +22,4 @@ COPY package.json .
 EXPOSE 8080
 
 WORKDIR /app/server
-CMD ["node", "--import", "tsx", "src/index.ts"]
+CMD ["node", "dist/index.js"]

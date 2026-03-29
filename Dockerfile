@@ -17,12 +17,8 @@ RUN cd server && npm install
 COPY server/ server/
 COPY package.json .
 
-# Compile TypeScript to JavaScript
-RUN cd server && npx tsc --outDir dist || true
-
 WORKDIR /app/server
 
 EXPOSE 8080
 
-# Run compiled JS with plain node — no tsx
-CMD ["node", "dist/index.js"]
+CMD ["node", "--import", "tsx", "src/index.ts"]

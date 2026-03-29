@@ -26,6 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/triage"
-  }
+    "url": "https://github.com/ioannisCC/triage-hackathon"
+  },
+  "homepage": "https://github.com/ioannisCC/triage-hackathon#readme"
 }

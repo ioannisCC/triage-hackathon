@@ -653,7 +653,7 @@ if (isProd) {
     } catch {
       // SPA fallback — serve index.html for client-side routing
       const { readFile } = await import('fs/promises')
-      const index = await readFile(join(process.cwd(), 'dashboard/dist/index.html'))
+      const index = await readFile(join(process.cwd(), '../dashboard/dist/index.html'))
       return new Response(index, { headers: { 'Content-Type': 'text/html' } })
     }
   })

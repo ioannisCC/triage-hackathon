@@ -12,6 +12,7 @@ COPY dashboard/package.json dashboard/
 RUN cd dashboard && npm install
 COPY dashboard/ dashboard/
 RUN cd dashboard && npm run build
+RUN ls -la dist/ && echo "Frontend built OK" || echo "NO DIST"
 
 # Install server deps
 COPY server/package.json server/tsconfig.json server/

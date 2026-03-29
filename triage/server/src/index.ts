@@ -51,11 +51,7 @@ app.get('/api/health', (c) => {
   return c.json({ name: 'Triage', description: 'Trust classification for the agent economy', status: 'running' })
 })
 
-// Blog page — serve static HTML
-app.get('/', (c) => {
-  const html = readFileSync(join(__dirname, 'pages/blog.html'), 'utf-8')
-  return c.html(html)
-})
+// Blog page — serve at /blog only (dashboard serves at / in production)
 app.get('/blog', (c) => {
   const html = readFileSync(join(__dirname, 'pages/blog.html'), 'utf-8')
   return c.html(html)

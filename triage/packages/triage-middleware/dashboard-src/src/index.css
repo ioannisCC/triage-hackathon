@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-page: #090d15;
+  --color-fg: rgba(238, 243, 250, 0.94);
+  --color-mid: rgba(180, 193, 212, 0.78);
+  --color-mute: rgba(120, 140, 165, 0.56);
+  --color-human: #36d068;
+  --color-agent: #4a91f7;
+  --color-bot: #f0a020;
+  --color-blocked: #ee5555;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --animate-fade-up: fadeUp 0.42s ease both;
+  --animate-live-pulse: livePulse 2s ease-in-out infinite;
+  --animate-digit-flip: digitFlip 0.28s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html, body, #root { width: 100%; height: 100%; }
+body { background: #090d15; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; color: var(--color-fg); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes livePulse { 0%, 100% { transform: scale(1); opacity: 0.18; } 50% { transform: scale(2.5); opacity: 0.04; } }
+@keyframes digitFlip { 0% { transform: translateY(-18%) rotateX(-18deg); opacity: 0.4; } 100% { transform: translateY(0) rotateX(0deg); opacity: 1; } }
+
+.card {
+  @apply relative rounded-2xl overflow-hidden;
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), inset 0 -1px 0 0 rgba(255, 255, 255, 0.02), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+.card::before { content: ''; @apply absolute inset-0 pointer-events-none rounded-2xl; background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%, rgba(255, 255, 255, 0.01) 100%); }
+
+.grid-feed { grid-template-columns: minmax(72px, 88px) 1fr minmax(32px, 40px) minmax(48px, 64px) minmax(42px, 52px); }
+.grid-leaderboard { grid-template-columns: 20px 1fr 70px 76px 50px; }
+.feed-row { transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.9s ease; }
+
+.triage-main { @apply flex-1 overflow-hidden flex flex-col w-full px-6 pt-5 pb-6; gap: 16px; max-width: 1320px; margin: 0 auto; }
+.stat-row { @apply flex flex-wrap; gap: 16px; }
+.stat-row > * { @apply flex-1; min-width: 140px; }
+.mid-row { @apply grid; grid-template-columns: 1fr 300px; gap: 16px; }
+.bot-row { @apply grid flex-1; grid-template-columns: 1fr 1fr; gap: 16px; min-height: 0; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.09); border-radius: 2px; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media (max-width: 1100px) { .mid-row { grid-template-columns: 1fr 240px !important; } }
+@media (max-width: 900px)  { .mid-row, .bot-row { grid-template-columns: 1fr !important; } }
+@media (max-width: 680px)  { .triage-main { padding: 10px 12px 12px !important; gap: 8px !important; } .stat-row { gap: 8px !important; } .stat-row > * { min-width: 120px !important; } }
+@media (max-width: 480px)  { .stat-row > * { min-width: calc(50% - 4px) !important; flex: none !important; } }

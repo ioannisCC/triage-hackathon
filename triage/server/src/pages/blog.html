@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Signal — Human-Verified Content</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 px-6 py-4">
+    <div class="max-w-3xl mx-auto flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight">The Signal</h1>
+        <p class="text-xs text-gray-500 mt-0.5">Human-verified content · Protected by Triage</p>
+      </div>
+      <div id="auth-status" class="flex items-center gap-2">
+        <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500"></div>
+        <span id="status-text" class="text-xs text-gray-500 mono">Not verified</span>
+        <button id="verify-btn" onclick="simulateVerify()"
+          class="ml-3 px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-colors">
+          Verify with World ID
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Article List -->
+  <main id="article-list" class="max-w-3xl mx-auto px-6 py-8">
+    <p class="text-gray-500 text-sm mb-6">Loading articles...</p>
+  </main>
+
+  <!-- Article View (hidden by default) -->
+  <main id="article-view" class="max-w-3xl mx-auto px-6 py-8 hidden">
+    <button onclick="showList()" class="text-sm text-gray-500 hover:text-gray-300 mb-6 inline-block">&larr; Back to articles</button>
+    <article id="article-content"></article>
+  </main>
+
+  <!-- Footer showing Triage info -->
+  <footer class="fixed bottom-0 left-0 right-0 border-t border-gray-800 bg-gray-950/90 backdrop-blur px-6 py-3">
+    <div class="max-w-3xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-[10px] text-gray-600 mono">POWERED BY TRIAGE</span>
+        <span id="tier-badge" class="text-[10px] mono px-2 py-0.5 rounded-full bg-gray-800 text-gray-500">&mdash;</span>
+        <span id="price-badge" class="text-[10px] mono text-gray-600">&mdash;</span>
+      </div>
+      <a href="http://localhost:5173" target="_blank" class="text-[10px] text-gray-600 hover:text-gray-400 mono">
+        Open Dashboard &rarr;
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    let isVerified = false;
+    let worldIdToken = null;
+    const API = window.location.origin;
+
+    function simulateVerify() {
+      isVerified = true;
+      worldIdToken = 'verified';
+      document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-emerald-500';
+      document.getElementById('status-text').textContent = 'Verified Human';
+      document.getElementById('status-text').className = 'text-xs text-emerald-500 mono';
+      document.getElementById('verify-btn').textContent = '\u2713 Verified';
+      document.getElementById('verify-btn').disabled = true;
+      document.getElementById('verify-btn').className = 'ml-3 px-3 py-1.5 text-xs font-medium bg-gray-700 text-gray-400 rounded-lg cursor-default';
+      updateTierBadge('HUMAN', 'Free');
+    }
+
+    function updateTierBadge(tier, price) {
+      const badge = document.getElementById('tier-badge');
+      const priceBadge = document.getElementById('price-badge');
+      const colors = {
+        'HUMAN':       { bg: 'bg-emerald-900/50', text: 'text-emerald-400', border: 'border border-emerald-800' },
+        'HUMAN_AGENT': { bg: 'bg-blue-900/50',    text: 'text-blue-400',    border: 'border border-blue-800' },
+        'ANON_BOT':    { bg: 'bg-yellow-900/50',  text: 'text-yellow-400',  border: 'border border-yellow-800' },
+        'BLOCKED':     { bg: 'bg-red-900/50',      text: 'text-red-400',     border: 'border border-red-800' },
+      };
+      const c = colors[tier] || colors['BLOCKED'];
+      badge.className = 'text-[10px] mono px-2 py-0.5 rounded-full ' + c.bg + ' ' + c.text + ' ' + c.border;
+      badge.textContent = tier;
+      priceBadge.textContent = price;
+      priceBadge.className = 'text-[10px] mono ' + (tier === 'HUMAN' ? 'text-emerald-500' : 'text-gray-500');
+    }
+
+    async function loadArticles() {
+      try {
+        const res = await fetch(API + '/api/content');
+        const data = await res.json();
+        const list = document.getElementById('article-list');
+        list.innerHTML = data.map(function(a) {
+          return '<div onclick="loadArticle(\'' + a.id + '\')" ' +
+            'class="group cursor-pointer border border-gray-800 hover:border-gray-700 rounded-xl p-5 mb-3 transition-colors">' +
+            '<div class="flex items-center gap-2 mb-2">' +
+            '<span class="text-[10px] mono text-gray-600 uppercase tracking-wider">' + a.category + '</span>' +
+            '<span class="text-[10px] text-gray-700">&middot;</span>' +
+            '<span class="text-[10px] text-gray-600">' + a.publishedAt + '</span>' +
+            '</div>' +
+            '<h2 class="text-lg font-semibold group-hover:text-white transition-colors">' + a.title + '</h2>' +
+            '<p class="text-sm text-gray-400 mt-1.5">' + a.summary + '</p>' +
+            '<p class="text-xs text-gray-600 mt-2">By ' + a.author + '</p>' +
+            '</div>';
+        }).join('');
+      } catch (e) {
+        document.getElementById('article-list').innerHTML = '<p class="text-red-400">Failed to load articles</p>';
+      }
+    }
+
+    async function loadArticle(id) {
+      var headers = {};
+      if (isVerified) {
+        headers['x-world-id'] = worldIdToken;
+      }
+
+      try {
+        var res = await fetch(API + '/api/content/' + id, { headers: headers });
+
+        if (res.status === 403) {
+          updateTierBadge('BLOCKED', 'Denied');
+          alert('Access denied. Please verify with World ID to read articles for free.');
+          return;
+        }
+
+        if (res.status === 402) {
+          var payData = await res.json();
+          var amount = payData.x402 && payData.x402.accepts && payData.x402.accepts[0] ? payData.x402.accepts[0].amount : '0';
+          updateTierBadge(payData.triage ? payData.triage.tier : 'ANON_BOT', '$' + (parseInt(amount) / 1e6).toFixed(3));
+          alert('Payment required. Verify with World ID to read for free, or pay via x402.');
+          return;
+        }
+
+        var article = await res.json();
+        var tier = res.headers.get('X-Triage-Tier') || 'HUMAN';
+        var score = res.headers.get('X-Triage-Trust-Score') || '100';
+        updateTierBadge(tier, tier === 'HUMAN' ? 'Free' : 'Score: ' + score);
+
+        var view = document.getElementById('article-view');
+        var list = document.getElementById('article-list');
+
+        var paragraphs = article.content.split('. ');
+        var html = '<p class="mt-4 text-gray-300 leading-relaxed">';
+        for (var i = 0; i < paragraphs.length; i++) {
+          if (i > 0 && i % 3 === 0) html += '.</p><p class="mt-4 text-gray-300 leading-relaxed">';
+          else if (i > 0) html += '. ';
+          html += paragraphs[i];
+        }
+        html += '</p>';
+
+        document.getElementById('article-content').innerHTML =
+          '<div class="flex items-center gap-2 mb-4">' +
+          '<span class="text-[10px] mono text-gray-600 uppercase tracking-wider">' + article.category + '</span>' +
+          '<span class="text-[10px] text-gray-700">&middot;</span>' +
+          '<span class="text-[10px] text-gray-600">' + article.publishedAt + '</span>' +
+          '</div>' +
+          '<h1 class="text-3xl font-bold mb-2">' + article.title + '</h1>' +
+          '<p class="text-sm text-gray-500 mb-8">By ' + article.author + '</p>' +
+          '<div class="text-gray-300 leading-relaxed text-base">' + html + '</div>';
+
+        list.classList.add('hidden');
+        view.classList.remove('hidden');
+      } catch (e) {
+        alert('Error loading article: ' + e.message);
+      }
+    }
+
+    function showList() {
+      document.getElementById('article-list').classList.remove('hidden');
+      document.getElementById('article-view').classList.add('hidden');
+    }
+
+    loadArticles();
+  </script>
+</body>
+</html>

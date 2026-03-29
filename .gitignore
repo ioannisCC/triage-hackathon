@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Environment variables (SECRETS)
+.env
+.env.local
+.env.production
+
+# XMTP local database (contains encrypted messages)
+.xmtp-db
+.xmtp-db-shm
+.xmtp-db-wal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+.claude/
+.settings.local.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Lock files (optional — remove these lines if you want locks in repo)
+# package-lock.json
+
+# Vite cache
+.vite/
+
+# Docs
+TRIAGE_COMPLETE_SESSION_SUMMARY.md
+TRIAGE_PROJECT_BLUEPRINT.md.pdf
+TRIAGE_V2_COMPLETE_OVERVIEW.md
+documentation/TRIAGE_PROJECT_BLUEPRINT.md

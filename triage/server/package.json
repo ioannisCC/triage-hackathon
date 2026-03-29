@@ -1,0 +1,34 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "@hono/node-server": "^1.19.11",
+    "@worldcoin/agentkit": "^0.1.5",
+    "@worldcoin/idkit-server": "^1.0.0",
+    "@x402/core": "^2.8.0",
+    "@x402/evm": "^2.8.0",
+    "@x402/hono": "^2.8.0",
+    "@xmtp/agent-sdk": "^2.3.0",
+    "dotenv": "^17.3.1",
+    "ethers": "^6.16.0",
+    "hono": "^4.12.9",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

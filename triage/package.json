@@ -1,0 +1,10 @@
+{
+  "name": "triage",
+  "private": true,
+  "scripts": {
+    "install:all": "cd dashboard && npm install && cd ../server && npm install",
+    "build": "cd dashboard && npm run build && cd ../server && npx tsc",
+    "start": "cd server && NODE_ENV=production node dist/index.js",
+    "dev": "cd server && npm run dev"
+  }
+}

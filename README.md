@@ -346,4 +346,8 @@ X-Triage-Identity: agentkit
   <strong>Ioan Croitor Catargiu</strong> — Athens, 2026
 </p>
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+<p align="center">
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License" />
+  </a>
+</p>

@@ -345,3 +345,5 @@ X-Triage-Identity: agentkit
   Built for the <strong>AgentKit Hackathon</strong> by World, Coinbase & XMTP<br/>
   <strong>Ioan Croitor Catargiu</strong> — Athens, 2026
 </p>
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)

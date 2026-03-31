@@ -28,7 +28,7 @@
       src="./documentation/demo_thumbnail.png"
       alt="Watch the Triage demo"
       width="760"
-      style="border-radius: 20px;"
+      style="border-radius: 50px;"
     />
   </a>
 </p>

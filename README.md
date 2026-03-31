@@ -22,6 +22,13 @@
   <a href="https://triage-roaster-production.up.railway.app/triage">Package Dashboard</a>
 </p>
 
+<p align="center">
+  <a href="./documentation/demo.mp4">
+    <img src="./documentation/demo_thumbnail.png" alt="Watch the Triage demo" width="900" />
+  </a>
+</p>
+<p align="center"><em>click the image to watch the demo</em></p>
+
 ---
 
 ## What is Triage?

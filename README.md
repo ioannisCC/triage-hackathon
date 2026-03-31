@@ -24,7 +24,12 @@
 
 <p align="center">
   <a href="./documentation/demo.mp4">
-    <img src="./documentation/demo_thumbnail.png" alt="Watch the Triage demo" width="900" />
+    <img
+      src="./documentation/demo_thumbnail.png"
+      alt="Watch the Triage demo"
+      width="760"
+      style="border-radius: 20px;"
+    />
   </a>
 </p>
 <p align="center"><em>click the image to watch the demo</em></p>

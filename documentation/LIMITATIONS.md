@@ -8,7 +8,8 @@ All data (agent profiles, bounties, verified humans, monitored wallets) is store
 ### 3. No Rate Limiting
 No request rate limiting at the HTTP level. The trust formula penalizes high-frequency agents, but there's no hard cap preventing DoS.
 
-### 4. XMTP Native Binding on Railway
+### 4. XMTP Native Binding o
+n Railway
 `@xmtp/node-bindings` uses `import.meta.url` in its loader, which `tsx`'s CJS require hook cannot handle. The bot may fail to start on Railway depending on the environment.
 
 **Workaround**: Server catches the error and continues without XMTP. Bot is non-blocking.

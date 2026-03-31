@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="./documentation/demo.mp4">
+  <a href="https://x.com/ioanniscc/status/2038987824523800970?s=46">
     <img
       src="./documentation/demo_thumbnail.png"
       alt="Watch the Triage demo"

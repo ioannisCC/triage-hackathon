@@ -2,9 +2,6 @@
 
 ## Hackathon Constraints
 
-### 1. Temporary Demo Credentials
-Some demo/testnet credentials are temporarily embedded in the hackathon deployment and will be rotated post-hackathon.
-
 ### 2. In-Memory Storage
 All data (agent profiles, bounties, verified humans, monitored wallets) is stored in JavaScript Maps/Sets. Restarting the server loses everything. Production needs PostgreSQL or similar.
 

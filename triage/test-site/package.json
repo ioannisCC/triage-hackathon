@@ -20,6 +20,7 @@
     "@worldcoin/idkit": "^4.0.11",
     "@worldcoin/idkit-server": "^1.0.0",
     "concurrently": "^9.2.1",
+    "dotenv": "^17.3.1",
     "framer-motion": "^12.38.0",
     "hono": "^4.12.9",
     "react": "^19.2.4",

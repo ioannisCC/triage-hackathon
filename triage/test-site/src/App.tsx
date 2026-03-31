@@ -1,5 +1,106 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, type CSSProperties } from 'react'
 import { MeshGradient } from '@paper-design/shaders-react'
+
+// ─── Presentation Page (temporary, for video recording) ──────────────
+
+function WordReveal({ text, delay, isGradient }: { text: string; delay: number; isGradient?: boolean }) {
+  const words = text.split(' ')
+  return (
+    <>
+      {words.map((word, i) => (
+        <span key={i} style={{
+          display: 'inline-block', margin: '0 0.12em',
+          opacity: 0, filter: 'blur(8px)', transform: 'translateY(30px) scale(0.85)',
+          animation: `word-reveal 0.8s ease-out forwards`,
+          animationDelay: `${delay + i * 150}ms`,
+          ...(isGradient ? { background: 'linear-gradient(to bottom, white, rgba(255,255,255,0.4))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : {}),
+        }}>
+          {word}
+        </span>
+      ))}
+    </>
+  )
+}
+
+function PresentationPage() {
+  const [logoVisible, setLogoVisible] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => setLogoVisible(true), 200)
+  }, [])
+
+  return (
+    <>
+      <style>{`
+        @keyframes word-reveal {
+          0% { opacity: 0; transform: translateY(30px) scale(0.85); filter: blur(8px); }
+          60% { opacity: 1; transform: translateY(8px) scale(0.97); filter: blur(1px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes logo-reveal {
+          0% { opacity: 0; transform: scale(0.7); filter: blur(20px); }
+          50% { opacity: 0.8; transform: scale(1.02); filter: blur(3px); }
+          100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes line-grow {
+          0% { width: 0; opacity: 0; }
+          100% { width: 80px; opacity: 0.3; }
+        }
+        @keyframes dot-fade {
+          0% { opacity: 0; transform: scale(0); }
+          100% { opacity: 0.4; transform: scale(1); }
+        }
+      `}</style>
+
+      <MeshGradient
+        className="!fixed inset-0 w-full h-full z-0"
+        style={{ position: 'fixed' }}
+        colors={['#000000', '#1a1a1a', '#333333', '#ffffff']}
+        speed={0.12}
+      />
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1, opacity: 0.12, pointerEvents: 'none', mixBlendMode: 'overlay' as const, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', backgroundSize: '512px 512px' }} />
+
+      <div style={{ position: 'relative', zIndex: 10, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 40 }}>
+
+        {/* Logo — blur-to-sharp reveal */}
+        <div style={{
+          opacity: logoVisible ? 1 : 0,
+          transform: logoVisible ? 'scale(1)' : 'scale(0.7)',
+          filter: logoVisible ? 'blur(0)' : 'blur(20px)',
+          transition: 'all 1.4s cubic-bezier(0.16,1,0.3,1)',
+        }}>
+          <img src="/logo2.svg" alt="Triage" style={{ width: 200, height: 200 }} />
+        </div>
+
+        {/* Decorative line */}
+        <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(203,213,225,0.3), transparent)', animation: 'line-grow 1.5s ease-out forwards', animationDelay: '1s', width: 0, opacity: 0 }} />
+
+        {/* Title — word-by-word blur reveal */}
+        <h1 style={{ fontSize: 'clamp(52px, 9vw, 80px)', fontWeight: 800, letterSpacing: '-0.02em', textAlign: 'center', lineHeight: 1.1 }}>
+          <WordReveal text="TRIAGE" delay={1000} isGradient />
+        </h1>
+
+        {/* Tagline — word-by-word, slightly delayed */}
+        <p style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', textAlign: 'center', maxWidth: 500, color: 'rgba(255,255,255,0.5)', fontWeight: 300, letterSpacing: '0.02em' }}>
+          <WordReveal text="Trust infrastructure for the agent economy" delay={1600} />
+        </p>
+
+        {/* Three dots — appear last */}
+        <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{
+              width: 4, height: 4, borderRadius: '50%', background: 'rgba(203,213,225,0.6)',
+              opacity: 0, transform: 'scale(0)',
+              animation: 'dot-fade 0.5s ease-out forwards',
+              animationDelay: `${3200 + i * 200}ms`,
+            }} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
 import { IDKitRequestWidget, deviceLegacy } from '@worldcoin/idkit'
 import type { IDKitRequestHookConfig, IDKitResult } from '@worldcoin/idkit'
 
@@ -26,7 +127,24 @@ function CopyBtn({ text }: { text: string }) {
   )
 }
 
+function BgPage() {
+  return (
+    <>
+      <MeshGradient
+        className="!fixed inset-0 w-full h-full z-0"
+        style={{ position: 'fixed' }}
+        colors={['#000000', '#1a1a1a', '#333333', '#ffffff']}
+        speed={0.12}
+      />
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1, opacity: 0.12, pointerEvents: 'none', mixBlendMode: 'overlay' as const, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', backgroundSize: '512px 512px' }} />
+    </>
+  )
+}
+
 export default function App() {
+  if (window.location.pathname === '/bg') return <BgPage />
+  if (window.location.pathname === '/presentation') return <PresentationPage />
+
   const [verified, setVerified] = useState(false)
   const [humanId, setHumanId] = useState<string | null>(null)
   const [result, setResult] = useState<{ tier: string; trustScore: number; roast: string; price: string } | null>(null)

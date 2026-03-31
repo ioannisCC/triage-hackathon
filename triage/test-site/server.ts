@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
 import { cors } from 'hono/cors'
@@ -19,8 +20,8 @@ try {
 
   // Dashboard + World ID routes at /triage/*
   triageDashboard(app, {
-    rpId: 'rp_ac97197261e6f570',
-    signingKey: 'REDACTED_SIGNING_KEY',
+    rpId: process.env.WORLD_RP_ID || 'rp_ac97197261e6f570',
+    signingKey: process.env.WORLD_SIGNING_KEY || '',
   })
 
   triageLoaded = true

@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.80.0",
+    "@anthropic-ai/sdk": "^0.82.0",
     "@hono/node-server": "^1.19.11",
     "@worldcoin/agentkit": "^0.1.5",
     "@worldcoin/idkit-server": "^1.0.0",
